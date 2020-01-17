@@ -23,6 +23,6 @@ public class ZuulServerApplication {
     @GetMapping(value = "/")
     @ResponseBody
     public String getPatientByExpertId(){
-        return "zuul server cpntroller";
+        return "zuul server controller";
     }
 }
