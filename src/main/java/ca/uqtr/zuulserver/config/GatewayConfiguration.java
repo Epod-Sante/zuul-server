@@ -37,16 +37,14 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-       /* http.authorizeRequests()
+       http.authorizeRequests()
                 .antMatchers("/api/v1/auth-server/oauth/**",
                         "/api/v1/auth-server/registration",
                         "/api/v1/auth-server/docs")
                 .permitAll()
                 .antMatchers("/**")
-                .authenticated();*/
-        http.authorizeRequests()
-                .antMatchers("/**")
-                .permitAll();
+                .authenticated();
+        
     }
 
     @Primary
