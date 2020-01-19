@@ -41,7 +41,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/v1/auth-server/oauth/**",
                         "/api/v1/auth-server/registration",
                         "/api/v1/auth-server/docs",
-                        "/api/v1/patient/all")
+                        "/api/v1/patient-service/patient/all")
                 .permitAll()
                 .antMatchers("/**")
                 .authenticated();
