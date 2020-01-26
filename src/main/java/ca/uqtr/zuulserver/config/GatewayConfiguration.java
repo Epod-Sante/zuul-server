@@ -39,6 +39,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
     public void configure(final HttpSecurity http) throws Exception {
        http.authorizeRequests()
                 .antMatchers("/api/v1/auth-server/oauth/**",
+                        "/api/v1/auth-server/oauth/token",
                         "/api/v1/config-server/**",
                         "/api/v1/auth-server/registration",
                         "/api/v1/auth-server/registrationConfirm",
