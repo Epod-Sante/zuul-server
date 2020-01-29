@@ -31,6 +31,7 @@ import java.util.Arrays;
 public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
 
     private static final String AuthorizationServerBaseURL = "http://localhost:8762";
+    private static final String AuthorizationServerBaseURLHeroku = "https://epod-zuul.herokuapp.com";
 
     @Autowired
     private CustomAccessTokenConverter customAccessTokenConverter;
@@ -38,13 +39,13 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(final HttpSecurity http) throws Exception {
        http.authorizeRequests()
-                .antMatchers("/api/v1/auth-server/oauth/**",
-                        "/api/v1/auth-server/oauth/token",
-                        "/api/v1/config-server/**",
-                        "/api/v1/auth-server/registration",
-                        "/api/v1/auth-server/registrationConfirm",
-                        "/api/v1/auth-server/login",
-                        "/api/v1/auth-server/docs",
+                .antMatchers("/api/v1/auth-service/oauth/**",
+                        "/api/v1/auth-service/oauth/token",
+                        "/api/v1/auth-service/registration",
+                        "/api/v1/auth-service/registrationConfirm",
+                        "/api/v1/auth-service/login",
+                        "/api/v1/auth-service/docs",
+                        "/api/v1/config-service/**",
                         "/api/v1/patient-service/docs")
                 .permitAll()
                 .antMatchers("/**")
@@ -57,7 +58,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
     public RemoteTokenServices tokenService() {
         RemoteTokenServices tokenService = new RemoteTokenServices();
         tokenService.setCheckTokenEndpointUrl(
-                AuthorizationServerBaseURL+"/api/v1/auth-server/oauth/check_token");
+                AuthorizationServerBaseURLHeroku+"/api/v1/auth-service/oauth/check_token");
         tokenService.setClientId("SPA");
         tokenService.setClientSecret("secret");
         tokenService.setAccessTokenConverter(accessTokenConverter());

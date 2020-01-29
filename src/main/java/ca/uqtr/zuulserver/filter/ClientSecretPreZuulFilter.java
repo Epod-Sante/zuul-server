@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 @Component
 public class ClientSecretPreZuulFilter extends ZuulFilter {
@@ -22,6 +23,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
             try {
                 encoded = Base64.encode("SPA:secret".getBytes("UTF-8"));
                 ctx.addZuulRequestHeader("Authorization", "Basic " + new String(encoded));
+                System.out.println(new String(encoded));
             } catch (UnsupportedEncodingException e) {
                 logger.error("Error occured in pre filter", e);
             }
