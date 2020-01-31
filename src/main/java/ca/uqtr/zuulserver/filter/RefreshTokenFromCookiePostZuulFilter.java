@@ -30,7 +30,7 @@ public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
         HttpServletRequest req = ctx.getRequest();
         String refreshToken = extractRefreshToken(req);
         if (refreshToken != null) {
-            Map<String, String[]> param = new HashMap<String, String[]>();
+            Map<String, String[]> param = new HashMap<>();
             param.put("refresh_token", new String[] { refreshToken });
             param.put("grant_type", new String[] { "refresh_token" });
             ctx.setRequest(new CustomHttpServletRequest(req, param));
@@ -53,6 +53,7 @@ public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
     public String filterType() {
         return "post";
     }
+
     private String extractRefreshToken(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {

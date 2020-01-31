@@ -22,6 +22,7 @@ public class CustomHttpServletRequest extends HttpServletRequestWrapper {
         final Map<String, String[]> param = new HashMap<String, String[]>();
         param.putAll(map);
         param.putAll(additionalParams);
+        System.out.println(param);
         return param;
     }
 

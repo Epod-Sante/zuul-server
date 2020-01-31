@@ -52,7 +52,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 logger.info("refresh token = " + refreshToken);
 
             }
-            if (requestURI.contains("loggingout") && requestMethod.equals("DELETE")) {
+            if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
                 final Cookie cookie = new Cookie("refreshToken", "");
                 cookie.setMaxAge(0);
                 cookie.setPath(ctx.getRequest().getContextPath() + "/oauth/token");
