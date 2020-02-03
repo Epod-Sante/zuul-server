@@ -18,6 +18,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
+/*
+Type: Zuul filter.
+Functionality: Remove the refresh_token from the response and save in a cookies
+               Delete the cookies when there is a request to logout.
+*/
 @Component
 public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
 
@@ -61,7 +66,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
             ctx.setResponseBody(responseBody);
 
         } catch (final IOException e) {
-            logger.error("Error occured in zuul post filter", e);
+            logger.error("Error occurred in zuul post filter", e);
         }
         return null;
     }

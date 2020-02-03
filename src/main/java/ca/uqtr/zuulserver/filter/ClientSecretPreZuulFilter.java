@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+/*
+Type: Zuul filter.
+Functionality: Add the application client id and secret (auth_db.oauth_client_details table) encoded as base64 to the header (authorization) of the request to the oauth/token (login) URL.
+*/
 @Component
 public class ClientSecretPreZuulFilter extends ZuulFilter {
 
@@ -25,7 +29,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
                 ctx.addZuulRequestHeader("Authorization", "Basic " + new String(encoded));
                 System.out.println(new String(encoded));
             } catch (UnsupportedEncodingException e) {
-                logger.error("Error occured in pre filter", e);
+                logger.error("Error occurred in pre filter", e);
             }
         }
         return null;

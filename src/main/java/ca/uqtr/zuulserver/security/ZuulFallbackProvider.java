@@ -11,6 +11,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/*
+Type: Fallback provider.
+Functionality: Implementation of the FallbackProvider interface when a failure occurs on a route..
+*/
+
 @Component
 class ZuulFallbackProvider implements FallbackProvider {
 

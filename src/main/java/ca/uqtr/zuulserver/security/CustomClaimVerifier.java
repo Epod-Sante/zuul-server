@@ -5,6 +5,11 @@ import org.springframework.security.oauth2.provider.token.store.JwtClaimsSetVeri
 
 import java.util.Map;
 
+/*
+Type: Jwt claims verifier.
+Functionality: Verify the claim(s) in the JWT Claims Set, in our example is to verify the username.
+*/
+
 public class CustomClaimVerifier implements JwtClaimsSetVerifier {
     @Override
     public void verify(Map<String, Object> claims) throws InvalidTokenException {
