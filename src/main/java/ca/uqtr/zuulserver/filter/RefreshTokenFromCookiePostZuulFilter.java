@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import io.micrometer.core.instrument.util.IOUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -64,5 +66,17 @@ public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
             }
         }
         return null;
+    }
+
+
+    public String getUsernameFromJWT(String jwtToken){
+        String[] split_string = jwtToken.split("\\.");
+        String base64EncodedBody = split_string[1];
+
+        Base64 base64Url = new Base64(true);
+        String body = new String(base64Url.decode(base64EncodedBody));
+        JSONObject jsonObject = new JSONObject(body);
+
+        return jsonObject.getString("user_name");
     }
 }

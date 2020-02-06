@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 
 import io.micrometer.core.instrument.util.IOUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -35,30 +37,37 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         logger.info("in zuul filter " + ctx.getRequest().getRequestURI());
 
         final String requestURI = ctx.getRequest().getRequestURI();
-        final String requestMethod = ctx.getRequest().getMethod();
+        final String requestMethod = ctx.getRequest().getMethod();;
+        final String headerMethod = ctx.getRequest().getHeader("Authorization");
+        final String params = ctx.getRequest().getParameter("username");
 
         try {
+
             final InputStream is = ctx.getResponseDataStream();
             String responseBody = IOUtils.toString(is, StandardCharsets.UTF_8);
             if (responseBody.contains("refresh_token")) {
                 final Map<String, Object> responseMap = mapper.readValue(responseBody, new TypeReference<Map<String, Object>>() {
                 });
+
+                String username = getUsernameFromJWT((String) responseMap.get("access_token"));
                 final String refreshToken = responseMap.get("refresh_token").toString();
+                System.out.println(refreshToken);
+
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);
 
-                final Cookie cookie = new Cookie("refreshToken", refreshToken);
+                final Cookie cookie = new Cookie(username, refreshToken);
                 cookie.setHttpOnly(true);
                 // cookie.setSecure(true);
                 cookie.setPath(ctx.getRequest().getContextPath() + "/oauth/token");
                 cookie.setMaxAge(2592000); // 30 days
 
                 ctx.getResponse().addCookie(cookie);
-                logger.info("refresh token = " + refreshToken);
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
-                final Cookie cookie = new Cookie("refreshToken", "");
+                String username = getUsernameFromJWT(headerMethod);
+                final Cookie cookie = new Cookie(username, "");
                 cookie.setMaxAge(0);
                 cookie.setPath(ctx.getRequest().getContextPath() + "/oauth/token");
                 ctx.getResponse().addCookie(cookie);
@@ -86,4 +95,15 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         return "post";
     }
 
+
+    public String getUsernameFromJWT(String jwtToken){
+        String[] split_string = jwtToken.split("\\.");
+        String base64EncodedBody = split_string[1];
+
+        Base64 base64Url = new Base64(true);
+        String body = new String(base64Url.decode(base64EncodedBody));
+        JSONObject jsonObject = new JSONObject(body);
+
+        return jsonObject.getString("user_name");
+    }
 }

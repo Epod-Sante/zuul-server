@@ -3,6 +3,7 @@ package ca.uqtr.zuulserver.config;
 import ca.uqtr.zuulserver.security.CustomClaimVerifier;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -24,8 +25,8 @@ import java.util.Arrays;
 @EnableResourceServer
 public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
 
-    private static final String AuthorizationServerBaseURL = "http://localhost:8762";
-    private static final String AuthorizationServerBaseURLHeroku = "https://epod-zuul.herokuapp.com";
+    @Value("${authorization-server.base-url}")
+    private String AuthorizationServerBaseURL;
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
@@ -40,8 +41,10 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                         "/api/v1/config-service/**",
                         "/api/v1/patient-service/docs")
                 .permitAll()
+               .and()
+               .authorizeRequests()
                 .antMatchers("/**")
-                .permitAll();
+                .authenticated();
 
     }
 
@@ -55,7 +58,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
     public RemoteTokenServices tokenService() {
         RemoteTokenServices tokenService = new RemoteTokenServices();
         tokenService.setCheckTokenEndpointUrl(
-                AuthorizationServerBaseURLHeroku+"/api/v1/auth-service/oauth/check_token");
+                AuthorizationServerBaseURL+"/api/v1/auth-service/oauth/check_token");
         tokenService.setClientId("SPA");
         tokenService.setClientSecret("secret");
         tokenService.setAccessTokenConverter(accessTokenConverter());
