@@ -35,6 +35,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                         "/api/v1/auth-service/oauth/token",
                         "/api/v1/auth-service/registration",
                         "/api/v1/auth-service/registrationConfirm",
+                        "/api/v1/auth-service/create/user",
                         "/api/v1/auth-service/login",
                         "/api/v1/auth-service/loggingout",
                         "/api/v1/auth-service/docs",
