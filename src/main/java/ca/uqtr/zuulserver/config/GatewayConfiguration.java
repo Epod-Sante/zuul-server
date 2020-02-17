@@ -45,8 +45,9 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                         "/api/v1/config-service/**",
                         "/api/v1/patient-service/docs")
                 .permitAll()
-               .and()
-               .authorizeRequests()
+                .and()
+                .authorizeRequests()
+                //.antMatchers("/api/v1/patient-service/create").hasRole("PROFESSIONAL")
                 .antMatchers("/**")
                 .authenticated();
 
