@@ -51,7 +51,6 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
 
                 String username = getUsernameFromJWT((String) responseMap.get("access_token"));
                 final String refreshToken = responseMap.get("refresh_token").toString();
-                System.out.println(refreshToken);
 
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);

@@ -45,7 +45,8 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                         "/api/v1/auth-service/test",
                         "/api/v1/config-service/**",
                         "/api/v1/patient-service/docs",
-                        "/api/v1/patient-service/create/professional")
+                        "/api/v1/patient-service/create/professional",
+                        "/api/v1/patient-service/questionnaire")
                 .permitAll()
                 .and()
                 .authorizeRequests()
