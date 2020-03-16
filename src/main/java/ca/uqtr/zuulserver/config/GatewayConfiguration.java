@@ -48,6 +48,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                         "/api/v1/patient-service/create/professional",
                         "/api/v1/patient-service/questionnaire",
                         "/api/v1/patient-service/login",
+                        "/api/v1/patient-service/socio",
                         "/api/v1/fitbit-service/notifications",
                         "/api/v1/fitbit-service/docs",
                         "/api/v1/fitbit-service/subscription/notifications")
