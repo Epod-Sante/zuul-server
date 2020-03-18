@@ -32,15 +32,24 @@ public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
         final RequestContext ctx = RequestContext.getCurrentContext();
         logger.info("in zuul filter RefreshTokenFromCookiePreZuulFilter" + ctx.getRequest().getRequestURI());
 
-        HttpServletRequest req = ctx.getRequest();
-        String refreshToken = extractRefreshToken(req, "myriam");
+        String token = ctx.getRequest().getHeader("Authorization");
 
-        if (refreshToken != null) {
+        System.out.println("----------------------- access=  " + token);
+        if (token != null) {
+            token = token.replace("bearer ","");
+            String username = getUsernameFromJWT(token);
+            System.out.println("-----------------------   " + username);
 
-            Map<String, String[]> param = new HashMap<>();
-            param.put("refresh_token", new String[]{refreshToken});
-            //param.put("grant_type", new String[] { "refresh_token" });
-            ctx.setRequest(new CustomHttpServletRequest(req, param));
+            HttpServletRequest req = ctx.getRequest();
+            String refreshToken = extractRefreshToken(req, username);
+
+            if (refreshToken != null) {
+
+                Map<String, String[]> param = new HashMap<>();
+                param.put("refresh_token", new String[]{refreshToken});
+                //param.put("grant_type", new String[] { "refresh_token" });
+                ctx.setRequest(new CustomHttpServletRequest(req, param));
+            }
         }
 
 
