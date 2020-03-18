@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import io.micrometer.core.instrument.util.IOUtils;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -23,15 +24,26 @@ import java.util.Map;
 public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ObjectMapper mapper = new ObjectMapper();
 
+    @SneakyThrows
     @Override
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
         logger.info("in zuul filter " + ctx.getRequest().getRequestURI());
 
+        InputStream is = ctx.getResponseDataStream();
+        String responseBody = IOUtils.toString(is, StandardCharsets.UTF_8);
+        final Map<String, Object> responseMap = mapper.readValue(responseBody, new TypeReference<Map<String, Object>>() {
+        });
+        String username = getUsernameFromJWT((String) responseMap.get("access_token"));
+
         HttpServletRequest req = ctx.getRequest();
-        String refreshToken = extractRefreshToken(req);
+        String refreshToken = extractRefreshToken(req, username);
+        System.out.println("-----------------------   "+refreshToken);
+
         if (refreshToken != null) {
+
             Map<String, String[]> param = new HashMap<>();
             param.put("refresh_token", new String[] { refreshToken });
             param.put("grant_type", new String[] { "refresh_token" });
@@ -56,11 +68,11 @@ public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
         return "post";
     }
 
-    private String extractRefreshToken(HttpServletRequest req) {
+    private String extractRefreshToken(HttpServletRequest req, String username) {
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
-                if (cookies[i].getName().equalsIgnoreCase("refreshToken")) {
+                if (cookies[i].getName().equalsIgnoreCase(username)) {
                     return cookies[i].getValue();
                 }
             }
