@@ -34,7 +34,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
     @Override
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
-        logger.info("in zuul filter " + ctx.getRequest().getRequestURI());
+        logger.info("in zuul filter RefreshTokenAsCookiePostZuulFilter" + ctx.getRequest().getRequestURI());
 
         final String requestURI = ctx.getRequest().getRequestURI();
         final String requestMethod = ctx.getRequest().getMethod();;

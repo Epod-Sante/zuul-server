@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
+public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ObjectMapper mapper = new ObjectMapper();
@@ -30,7 +30,7 @@ public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
     @Override
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
-        logger.info("in zuul filter " + ctx.getRequest().getRequestURI());
+        logger.info("in zuul filter RefreshTokenFromCookiePreZuulFilter" + ctx.getRequest().getRequestURI());
 
         InputStream is = ctx.getResponseDataStream();
         String responseBody = IOUtils.toString(is, StandardCharsets.UTF_8);
@@ -46,7 +46,7 @@ public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
 
             Map<String, String[]> param = new HashMap<>();
             param.put("refresh_token", new String[] { refreshToken });
-            param.put("grant_type", new String[] { "refresh_token" });
+            //param.put("grant_type", new String[] { "refresh_token" });
             ctx.setRequest(new CustomHttpServletRequest(req, param));
         }
 
@@ -65,7 +65,7 @@ public class RefreshTokenFromCookiePostZuulFilter extends ZuulFilter {
 
     @Override
     public String filterType() {
-        return "post";
+        return "pre";
     }
 
     private String extractRefreshToken(HttpServletRequest req, String username) {
