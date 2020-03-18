@@ -33,7 +33,6 @@ public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
         logger.info("in zuul filter RefreshTokenFromCookiePreZuulFilter" + ctx.getRequest().getRequestURI());
 
 
-        if (ctx.getRequest().getParameter("grant_type").equals("refresh_token")) {
             InputStream is = ctx.getResponseDataStream();
             String responseBody = IOUtils.toString(is, StandardCharsets.UTF_8);
             final Map<String, Object> responseMap = mapper.readValue(responseBody, new TypeReference<Map<String, Object>>() {
@@ -51,7 +50,7 @@ public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
                 //param.put("grant_type", new String[] { "refresh_token" });
                 ctx.setRequest(new CustomHttpServletRequest(req, param));
             }
-        }
+        
 
         return null;
     }
