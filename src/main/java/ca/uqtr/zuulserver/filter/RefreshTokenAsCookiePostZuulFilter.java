@@ -42,7 +42,12 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         final String params = ctx.getRequest().getParameter("username");
 
         try {
-            System.out.println("+++++++++  "+ctx.getRequest().getHeader("grant_type"));
+            System.out.println("+++++++++  "+ctx.getRequest().getContextPath());
+            System.out.println("+++++++++  "+ctx.getRequest().getPathInfo());
+            System.out.println("+++++++++  "+ctx.getRequest().getAuthType());
+            System.out.println("+++++++++  "+ctx.getRequest().getQueryString());
+            System.out.println("+++++++++  "+ctx.getRequest().getRequestURI());
+            System.out.println("+++++++++  "+ctx.getRequest().getParameter("grant_type"));
 
             final InputStream is = ctx.getResponseDataStream();
             String responseBody = IOUtils.toString(is, StandardCharsets.UTF_8);
