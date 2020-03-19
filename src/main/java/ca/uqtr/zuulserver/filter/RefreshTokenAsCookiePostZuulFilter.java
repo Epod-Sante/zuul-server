@@ -69,7 +69,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 HttpSession session = request.getSession();
                 request.getSession(false);
                 session.removeAttribute(username);
-                session.invalidate();
+                //session.invalidate();
             }
             ctx.setResponseBody(responseBody);
 
