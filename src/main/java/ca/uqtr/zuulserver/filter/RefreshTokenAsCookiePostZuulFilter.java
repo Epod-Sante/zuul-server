@@ -25,7 +25,7 @@ Type: Zuul filter.
 Functionality: Remove the refresh_token from the response and save in a cookies
                Delete the cookies when there is a request to logout.
 */
-@Component
+//@Component
 public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
