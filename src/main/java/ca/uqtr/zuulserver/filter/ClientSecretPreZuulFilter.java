@@ -35,6 +35,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
 
                 String token = ctx.getRequest().getHeader("Authorization");
 
+                
                 System.out.println("----------------------- access=  " + token);
                 if (token != null) {
                     token = token.replace("bearer ", "");
@@ -57,7 +58,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
             } catch (UnsupportedEncodingException e) {
                 logger.error("Error occurred in pre filter", e);
             }
-        
+
         return null;
     }
 
