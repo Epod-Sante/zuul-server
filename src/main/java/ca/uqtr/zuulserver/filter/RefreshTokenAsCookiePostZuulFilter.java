@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import io.micrometer.core.instrument.util.IOUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -42,6 +43,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         final String requestURI = ctx.getRequest().getRequestURI();
         final String requestMethod = ctx.getRequest().getMethod();;
         final String headerMethod = ctx.getRequest().getHeader("Authorization");
+        HttpServletRequest request = ctx.getRequest();
 
         try {
 
@@ -55,26 +57,19 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 final String refreshToken = responseMap.get("refresh_token").toString();
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);
+                HttpSession session = request.getSession();
+                request.getSession(true);
+                session.setAttribute(username, refreshToken);
 
-                final Cookie cookie = new Cookie(username, refreshToken);
-                cookie.setHttpOnly(true);
-                cookie.setSecure(true);
-                cookie.setPath(ctx.getRequest().getContextPath() + "/oauth/token");
-                System.out.println("+++++++++ Path cookie =  "+cookie.getPath());
-                cookie.setMaxAge(2592000); // 30 days
-                ctx.getResponse().addCookie(cookie);
-                System.out.println("+++++++++++cookie  -"+cookie.getName()+"-");
-                System.out.println("+++++++++++cookie  "+cookie.getValue());
-                System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), "myriam"));
-                System.out.println("+++++++++++readCookie  "+org.springframework.web.util.WebUtils.getCookie(ctx.getRequest(), "myriam"));
+                System.out.println("+++++++++++cookie  -"+session.getAttribute(username)+"-");
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
                 String username = getUsernameFromJWT(headerMethod);
-                final Cookie cookie = new Cookie(username, "");
-                cookie.setMaxAge(0);
-                cookie.setPath(ctx.getRequest().getServletPath());
-                ctx.getResponse().addCookie(cookie);
+                HttpSession session = request.getSession();
+                request.getSession(false);
+                session.removeAttribute(username);
+                session.invalidate();
             }
             ctx.setResponseBody(responseBody);
 
