@@ -61,7 +61,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 cookie.setHttpOnly(true);
                 // cookie.setSecure(true);
                 System.out.println("+++++++++ setPath =  "+ctx.getRequest().getServletPath());
-                cookie.setPath(ctx.getRequest().getServletPath()+ "/oauth/token");
+                cookie.setPath(ctx.getRequest().getServletPath());
                 cookie.setMaxAge(2592000); // 30 days
 
                 ctx.getResponse().addCookie(cookie);
