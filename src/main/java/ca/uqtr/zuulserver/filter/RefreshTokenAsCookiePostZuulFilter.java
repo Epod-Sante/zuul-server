@@ -45,7 +45,6 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
 
         try {
 
-            System.out.println("length = "+ctx.getRequest().getCookies().length);
             final InputStream is = ctx.getResponseDataStream();
             String responseBody = IOUtils.toString(is, StandardCharsets.UTF_8);
             if (responseBody.contains("refresh_token")) {
