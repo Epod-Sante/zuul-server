@@ -44,6 +44,8 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         final String headerMethod = ctx.getRequest().getHeader("Authorization");
 
         try {
+
+            System.out.println("length = "+ctx.getRequest().getCookies().length);
             final InputStream is = ctx.getResponseDataStream();
             String responseBody = IOUtils.toString(is, StandardCharsets.UTF_8);
             if (responseBody.contains("refresh_token")) {
@@ -58,7 +60,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 final Cookie cookie = new Cookie(username, refreshToken);
                 cookie.setHttpOnly(true);
                 // cookie.setSecure(true);
-                cookie.setPath(ctx.getRequest().getContextPath() + "/oauth/token");
+                cookie.setPath(ctx.getRequest().getServletPath());
                 System.out.println("+++++++++ Path cookie =  "+cookie.getPath());
                 cookie.setMaxAge(2592000); // 30 days
                 ctx.getResponse().addCookie(cookie);
@@ -66,6 +68,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 System.out.println("+++++++++++cookie  "+cookie.getValue());
                 System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), "myriam"));
                 System.out.println("+++++++++++readCookie  "+org.springframework.web.util.WebUtils.getCookie(ctx.getRequest(), "myriam"));
+                System.out.println("length = "+ctx.getRequest().getCookies().length);
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
