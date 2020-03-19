@@ -30,6 +30,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
         if (ctx.getRequest().getRequestURI().contains("oauth/token")) {
             byte[] encoded;
             try {
+                System.out.println("length = "+ctx.getRequest().getCookies().length);
                 encoded = Base64.encode("SPA:secret".getBytes("UTF-8"));
                 ctx.addZuulRequestHeader("Authorization", "Basic " + new String(encoded));
                 System.out.println(new String(encoded));
