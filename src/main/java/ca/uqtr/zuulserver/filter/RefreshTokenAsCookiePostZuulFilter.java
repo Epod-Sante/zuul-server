@@ -89,16 +89,10 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         return null;
     }
 
-    public Optional<String> readCookie(HttpServletRequest req, String key) {
-        return Arrays.stream(req.getCookies())
-                .filter(c -> key.equals(c.getName()))
-                .map(Cookie::getValue)
-                .findAny();
-    }
 
     private String extractRefreshToken(HttpServletRequest req, String username) {
         Cookie[] cookies = req.getCookies();
-        System.out.println(Arrays.toString(cookies));
+        System.out.println(cookies);
         if (cookies != null) {
             System.out.println("-----------------------  00 " + username);
             for (int i = 0; i < cookies.length; i++) {
