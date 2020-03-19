@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import io.micrometer.core.instrument.util.IOUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -66,6 +68,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
 
                 ctx.getResponse().addCookie(cookie);
                 System.out.println("+++++++++++cookie  "+cookie.getPath());
+                System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), username));
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
@@ -82,7 +85,21 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         }
         return null;
     }
-
+    private String extractRefreshToken(HttpServletRequest req, String username) {
+        Cookie[] cookies = req.getCookies();
+        System.out.println(Arrays.toString(cookies));
+        if (cookies != null) {
+            System.out.println("-----------------------  00 " + username);
+            for (int i = 0; i < cookies.length; i++) {
+                System.out.println("-----------------------  11 " + i);
+                if (cookies[i].getName().equalsIgnoreCase(username)) {
+                    System.out.println("..........." + cookies[i].getValue());
+                    return cookies[i].getValue();
+                }
+            }
+        }
+        return null;
+    }
     @Override
     public boolean shouldFilter() {
         return true;

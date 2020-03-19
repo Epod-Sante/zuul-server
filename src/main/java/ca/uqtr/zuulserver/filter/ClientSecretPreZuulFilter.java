@@ -39,7 +39,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
                     System.out.println("-----------------------  2 username " + username);
 
                     HttpServletRequest req = ctx.getRequest();
-                    System.out.println("-----------------------  2 getServletPath  " + req.getServletPath());
+                    System.out.println("-----------------------  2 getServletPath  " + req.getContextPath());
                     String refreshToken = extractRefreshToken(req, username);
                     System.out.println("-----------------------  2 refreshToken  " + refreshToken);
 
