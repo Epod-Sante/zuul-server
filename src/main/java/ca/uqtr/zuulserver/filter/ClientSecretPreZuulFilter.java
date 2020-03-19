@@ -27,15 +27,15 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        if (ctx.getRequest().getRequestURI().contains("oauth/token")) {System.out.println("----------------------- oauth/token  ");
+        if (ctx.getRequest().getRequestURI().contains("oauth/token")) {
             byte[] encoded;
             try {
-                /*String token = ctx.getRequest().getHeader("Authorization");
-
-                System.out.println("----------------------- access=  " + token);
-                if (token != null) {
-                    token = token.replace("bearer ", "");
-                    String username = getUsernameFromJWT(token);
+                encoded = Base64.encode("SPA:secret".getBytes("UTF-8"));
+                ctx.addZuulRequestHeader("Authorization", "Basic " + new String(encoded));
+                System.out.println(new String(encoded));
+                if (ctx.getRequest().getParameter("grant_type")  != null && ctx.getRequest().getParameter("grant_type").equals("refresh_token")){
+                
+                    String username = ctx.getRequest().getParameter("user_name");
                     System.out.println("-----------------------   " + username);
 
                     HttpServletRequest req = ctx.getRequest();
@@ -45,13 +45,10 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
 
                         Map<String, String[]> param = new HashMap<>();
                         param.put("refresh_token", new String[]{refreshToken});
-                        param.put("grant_type", new String[] { "refresh_token" });
+                        //param.put("grant_type", new String[] { "refresh_token" });
                         ctx.setRequest(new CustomHttpServletRequest(req, param));
                     }
-                }*/
-                encoded = Base64.encode("SPA:secret".getBytes("UTF-8"));
-                ctx.addZuulRequestHeader("Authorization", "Basic " + new String(encoded));
-                System.out.println(new String(encoded));
+                }
 
             } catch (UnsupportedEncodingException e) {
                 logger.error("Error occurred in pre filter", e);
