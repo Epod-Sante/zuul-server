@@ -31,24 +31,25 @@ public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
         logger.info("in zuul filter RefreshTokenFromCookiePreZuulFilter" + ctx.getRequest().getRequestURI());
+        if (!ctx.getRequest().getRequestURI().contains("check_token")) {
+            String token = ctx.getRequest().getHeader("Authorization");
 
-        String token = ctx.getRequest().getHeader("Authorization");
+            System.out.println("----------------------- access=  " + token);
+            if (token != null) {
+                token = token.replace("bearer ", "");
+                String username = getUsernameFromJWT(token);
+                System.out.println("-----------------------   " + username);
 
-        System.out.println("----------------------- access=  " + token);
-        if (token != null) {
-            token = token.replace("bearer ","");
-            String username = getUsernameFromJWT(token);
-            System.out.println("-----------------------   " + username);
+                HttpServletRequest req = ctx.getRequest();
+                String refreshToken = extractRefreshToken(req, username);
 
-            HttpServletRequest req = ctx.getRequest();
-            String refreshToken = extractRefreshToken(req, username);
+                if (refreshToken != null) {
 
-            if (refreshToken != null) {
-
-                Map<String, String[]> param = new HashMap<>();
-                param.put("refresh_token", new String[]{refreshToken});
-                //param.put("grant_type", new String[] { "refresh_token" });
-                ctx.setRequest(new CustomHttpServletRequest(req, param));
+                    Map<String, String[]> param = new HashMap<>();
+                    param.put("refresh_token", new String[]{refreshToken});
+                    //param.put("grant_type", new String[] { "refresh_token" });
+                    ctx.setRequest(new CustomHttpServletRequest(req, param));
+                }
             }
         }
 
