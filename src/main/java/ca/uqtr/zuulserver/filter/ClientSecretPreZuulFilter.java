@@ -27,7 +27,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        if (ctx.getRequest().getRequestURI().contains("oauth/token")) {
+        if (ctx.getRequest().getRequestURI().contains("oauth/token")) {System.out.println("----------------------- oauth/token  ");
             byte[] encoded;
             try {
                 /*String token = ctx.getRequest().getHeader("Authorization");
