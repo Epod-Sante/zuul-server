@@ -54,7 +54,6 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
 
                 String username = getUsernameFromJWT((String) responseMap.get("access_token"));
                 final String refreshToken = responseMap.get("refresh_token").toString();
-
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);
                 System.out.println("+++++++++ username =  "+username);
@@ -63,8 +62,8 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 final Cookie cookie = new Cookie(username, refreshToken);
                 cookie.setHttpOnly(true);
                 // cookie.setSecure(true);
-                System.out.println("+++++++++ setPath =  "+ctx.getRequest().getServletPath());
-                cookie.setPath(ctx.getRequest().getServletPath());
+                System.out.println("+++++++++ setPath =  "+ctx.getRequest().getContextPath());
+                cookie.setPath(ctx.getRequest().getContextPath());
                 cookie.setMaxAge(2592000); // 30 days
 
                 ctx.getResponse().addCookie(cookie);
