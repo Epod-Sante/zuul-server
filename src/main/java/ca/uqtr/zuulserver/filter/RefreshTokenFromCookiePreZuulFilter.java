@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+//@Component
 public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -31,7 +31,7 @@ public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
         logger.info("in zuul filter RefreshTokenFromCookiePreZuulFilter" + ctx.getRequest().getRequestURI());
-        if (!ctx.getRequest().getRequestURI().contains("check_token")) {
+        if (ctx.getRequest().getParameter("grant_type").equals("refresh_token")) {
             String token = ctx.getRequest().getHeader("Authorization");
 
             System.out.println("----------------------- access=  " + token);
