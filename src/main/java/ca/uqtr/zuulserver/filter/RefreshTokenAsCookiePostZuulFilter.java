@@ -68,6 +68,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 cookie.setMaxAge(2592000); // 30 days
 
                 ctx.getResponse().addCookie(cookie);
+                System.out.println("+++++++++++cookie  -"+cookie.getName()+"-");
                 System.out.println("+++++++++++cookie  "+cookie.getValue());
                 System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), username));
                 System.out.println("+++++++++++readCookie  ");
