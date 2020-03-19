@@ -67,7 +67,6 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 System.out.println("+++++++++++cookie  "+cookie.getValue());
                 System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), "myriam"));
                 System.out.println("+++++++++++readCookie  "+org.springframework.web.util.WebUtils.getCookie(ctx.getRequest(), "myriam"));
-                System.out.println("length = "+ctx.getRequest().getCookies().length);
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
