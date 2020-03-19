@@ -57,8 +57,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 final String refreshToken = responseMap.get("refresh_token").toString();
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);
-                HttpSession session = request.getSession();
-                request.getSession(true);
+                HttpSession session = request.getSession(true);
                 session.setAttribute(username, refreshToken);
 
                 System.out.println("+++++++++++cookie  -"+session.getAttribute(username)+"-");
@@ -66,8 +65,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
                 String username = getUsernameFromJWT(headerMethod);
-                HttpSession session = request.getSession();
-                request.getSession(false);
+                HttpSession session = request.getSession(false);
                 session.removeAttribute(username);
                 //session.invalidate();
             }
