@@ -36,15 +36,10 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
                 if (ctx.getRequest().getParameter("grant_type")  != null && ctx.getRequest().getParameter("grant_type").equals("refresh_token")){
 
                     String username = ctx.getRequest().getParameter("user_name");
-                    System.out.println("-----------------------  2 username " + username);
-
                     HttpServletRequest req = ctx.getRequest();
-                    System.out.println("-----------------------  2 getServletPath  " + req.getContextPath());
                     String refreshToken = extractRefreshToken(req, username);
-                    System.out.println("-----------------------  2 refreshToken  " + refreshToken);
 
                     if (refreshToken != null) {
-
                         Map<String, String[]> param = new HashMap<>();
                         param.put("refresh_token", new String[]{refreshToken});
                         //param.put("grant_type", new String[] { "refresh_token" });
@@ -63,9 +58,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
         Cookie[] cookies = req.getCookies();
         System.out.println(Arrays.toString(cookies));
         if (cookies != null) {
-            System.out.println("-----------------------  00 " + username);
             for (int i = 0; i < cookies.length; i++) {
-                System.out.println("-----------------------  11 " + i);
                 if (cookies[i].getName().equalsIgnoreCase(username)) {
                     System.out.println("..........." + cookies[i].getValue());
                     return cookies[i].getValue();
