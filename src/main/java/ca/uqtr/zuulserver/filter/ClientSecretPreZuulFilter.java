@@ -30,25 +30,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
         if (ctx.getRequest().getRequestURI().contains("oauth/token") || ctx.getRequest().getParameter("grant_type").equals("refresh_token")) {
             byte[] encoded;
             try {
-                String token = ctx.getRequest().getHeader("Authorization");
 
-                System.out.println("----------------------- access=  " + token);
-                if (token != null) {
-                    token = token.replace("bearer ", "");
-                    String username = getUsernameFromJWT(token);
-                    System.out.println("-----------------------   " + username);
-
-                    HttpServletRequest req = ctx.getRequest();
-                    String refreshToken = extractRefreshToken(req, username);
-
-                    if (refreshToken != null) {
-
-                        Map<String, String[]> param = new HashMap<>();
-                        param.put("refresh_token", new String[]{refreshToken});
-                        param.put("grant_type", new String[] { "refresh_token" });
-                        ctx.setRequest(new CustomHttpServletRequest(req, param));
-                    }
-                }
                 encoded = Base64.encode("SPA:secret".getBytes("UTF-8"));
                 ctx.addZuulRequestHeader("Authorization", "Basic " + new String(encoded));
                 System.out.println(new String(encoded));
