@@ -40,7 +40,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
 
                     HttpServletRequest req = ctx.getRequest();
                     String refreshToken = extractRefreshToken(req, username);
-                    System.out.println("-----------------------  2 refreshToken" + refreshToken);
+                    System.out.println("-----------------------  2 refreshToken  " + refreshToken);
 
                     if (refreshToken != null) {
 
@@ -60,8 +60,11 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
 
     private String extractRefreshToken(HttpServletRequest req, String username) {
         Cookie[] cookies = req.getCookies();
+        System.out.println(Arrays.toString(cookies));
         if (cookies != null) {
+            System.out.println("-----------------------  00 " + username);
             for (int i = 0; i < cookies.length; i++) {
+                System.out.println("-----------------------  11 " + i);
                 if (cookies[i].getName().equalsIgnoreCase(username)) {
                     System.out.println("..........." + cookies[i].getValue());
                     return cookies[i].getValue();
