@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -62,20 +63,21 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 final Cookie cookie = new Cookie(username, refreshToken);
                 cookie.setHttpOnly(true);
                 // cookie.setSecure(true);
-                System.out.println("+++++++++ setPath =  "+ctx.getRequest().getContextPath());
+                System.out.println("+++++++++ setPath =  "+ctx.getRequest().getServletPath());
                 cookie.setPath(ctx.getRequest().getServletPath());
                 cookie.setMaxAge(2592000); // 30 days
 
                 ctx.getResponse().addCookie(cookie);
                 System.out.println("+++++++++++cookie  "+cookie.getPath());
                 System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), username));
+                System.out.println("+++++++++++readCookie  "+readCookie(ctx.getRequest(), username));
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
                 String username = getUsernameFromJWT(headerMethod);
                 final Cookie cookie = new Cookie(username, "");
                 cookie.setMaxAge(0);
-                cookie.setPath(ctx.getRequest().getContextPath() + "/oauth/token");
+                cookie.setPath(ctx.getRequest().getServletPath());
                 ctx.getResponse().addCookie(cookie);
             }
             ctx.setResponseBody(responseBody);
@@ -85,6 +87,14 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         }
         return null;
     }
+
+    public Optional<String> readCookie(HttpServletRequest req, String key) {
+        return Arrays.stream(req.getCookies())
+                .filter(c -> key.equals(c.getName()))
+                .map(Cookie::getValue)
+                .findAny();
+    }
+
     private String extractRefreshToken(HttpServletRequest req, String username) {
         Cookie[] cookies = req.getCookies();
         System.out.println(Arrays.toString(cookies));
