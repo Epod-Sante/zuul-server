@@ -68,9 +68,9 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 cookie.setMaxAge(2592000); // 30 days
 
                 ctx.getResponse().addCookie(cookie);
-                System.out.println("+++++++++++cookie  "+cookie.getPath());
+                System.out.println("+++++++++++cookie  "+cookie.getValue());
                 System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), username));
-                System.out.println("+++++++++++readCookie  "+readCookie(ctx.getRequest(), username));
+                System.out.println("+++++++++++readCookie  ");
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
