@@ -27,15 +27,11 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
+        if (ctx.getRequest().getRequestURI().contains("oauth/token") || ctx.getRequest().getParameter("grant_type").equals("refresh_token")) {
             byte[] encoded;
             try {
-                encoded = Base64.encode("SPA:secret".getBytes("UTF-8"));
-                ctx.addZuulRequestHeader("Authorization", "Basic " + new String(encoded));
-                System.out.println(new String(encoded));
-
                 String token = ctx.getRequest().getHeader("Authorization");
 
-                
                 System.out.println("----------------------- access=  " + token);
                 if (token != null) {
                     token = token.replace("bearer ", "");
@@ -53,12 +49,14 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
                         ctx.setRequest(new CustomHttpServletRequest(req, param));
                     }
                 }
-
+                encoded = Base64.encode("SPA:secret".getBytes("UTF-8"));
+                ctx.addZuulRequestHeader("Authorization", "Basic " + new String(encoded));
+                System.out.println(new String(encoded));
 
             } catch (UnsupportedEncodingException e) {
                 logger.error("Error occurred in pre filter", e);
             }
-
+        }
         return null;
     }
 
