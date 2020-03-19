@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,8 +38,9 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
 
                     String username = ctx.getRequest().getParameter("user_name");
                     HttpServletRequest req = ctx.getRequest();
-                    String refreshToken = extractRefreshToken(req, username);
-
+                    HttpSession session = req.getSession();
+                    System.out.println("+++++++++++session  -"+session.getAttribute(username)+"-");
+                    String refreshToken = session.getAttribute(username).toString();
                     if (refreshToken != null) {
                         Map<String, String[]> param = new HashMap<>();
                         param.put("refresh_token", new String[]{refreshToken});
