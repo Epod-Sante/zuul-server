@@ -42,10 +42,8 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
         final String requestURI = ctx.getRequest().getRequestURI();
         final String requestMethod = ctx.getRequest().getMethod();;
         final String headerMethod = ctx.getRequest().getHeader("Authorization");
-        final String params = ctx.getRequest().getParameter("username");
 
         try {
-
             final InputStream is = ctx.getResponseDataStream();
             String responseBody = IOUtils.toString(is, StandardCharsets.UTF_8);
             if (responseBody.contains("refresh_token")) {
@@ -56,21 +54,18 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 final String refreshToken = responseMap.get("refresh_token").toString();
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);
-                System.out.println("+++++++++ username =  "+username);
-                System.out.println("+++++++++ refreshToken =  "+refreshToken);
 
                 final Cookie cookie = new Cookie(username, refreshToken);
                 cookie.setHttpOnly(true);
                 // cookie.setSecure(true);
-                System.out.println("+++++++++ setPath =  "+ctx.getRequest().getContextPath());
-                cookie.setPath(ctx.getRequest().getContextPath());
+                cookie.setPath(ctx.getRequest().getContextPath() + "/oauth/token");
+                System.out.println("+++++++++ Path cookie =  "+cookie.getPath());
                 cookie.setMaxAge(2592000); // 30 days
-
                 ctx.getResponse().addCookie(cookie);
                 System.out.println("+++++++++++cookie  -"+cookie.getName()+"-");
                 System.out.println("+++++++++++cookie  "+cookie.getValue());
-                System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), username));
-                System.out.println("+++++++++++readCookie  "+org.springframework.web.util.WebUtils.getCookie(ctx.getRequest(), username));
+                System.out.println("+++++++++++extractRefreshToken  "+extractRefreshToken(ctx.getRequest(), "myriam"));
+                System.out.println("+++++++++++readCookie  "+org.springframework.web.util.WebUtils.getCookie(ctx.getRequest(), "myriam"));
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
