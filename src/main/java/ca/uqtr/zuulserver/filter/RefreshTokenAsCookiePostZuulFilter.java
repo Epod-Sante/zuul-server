@@ -55,6 +55,7 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);
                 System.out.println("+++++++++ username =  "+username);
+                System.out.println("+++++++++ refreshToken =  "+refreshToken);
 
                 final Cookie cookie = new Cookie(username, refreshToken);
                 cookie.setHttpOnly(true);

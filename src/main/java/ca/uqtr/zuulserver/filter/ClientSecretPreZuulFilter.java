@@ -36,10 +36,11 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
                 if (ctx.getRequest().getParameter("grant_type")  != null && ctx.getRequest().getParameter("grant_type").equals("refresh_token")){
 
                     String username = ctx.getRequest().getParameter("user_name");
-                    System.out.println("-----------------------   " + username);
+                    System.out.println("-----------------------  2 username " + username);
 
                     HttpServletRequest req = ctx.getRequest();
                     String refreshToken = extractRefreshToken(req, username);
+                    System.out.println("-----------------------  2 refreshToken" + refreshToken);
 
                     if (refreshToken != null) {
 
