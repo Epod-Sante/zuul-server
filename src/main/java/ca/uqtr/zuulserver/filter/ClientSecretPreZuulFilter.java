@@ -27,7 +27,6 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        if (ctx.getRequest().getRequestURI().contains("oauth/token")) {
             byte[] encoded;
             try {
                 encoded = Base64.encode("SPA:secret".getBytes("UTF-8"));
@@ -58,7 +57,7 @@ public class ClientSecretPreZuulFilter extends ZuulFilter {
             } catch (UnsupportedEncodingException e) {
                 logger.error("Error occurred in pre filter", e);
             }
-        }
+        
         return null;
     }
 
