@@ -60,10 +60,12 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 final Cookie cookie = new Cookie(username, refreshToken);
                 cookie.setHttpOnly(true);
                 // cookie.setSecure(true);
+                System.out.println("+++++++++ setPath =  "+ctx.getRequest().getContextPath());
                 cookie.setPath(ctx.getRequest().getContextPath() + "/oauth/token");
                 cookie.setMaxAge(2592000); // 30 days
 
                 ctx.getResponse().addCookie(cookie);
+                System.out.println("+++++++++++cookie  "+cookie);
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
