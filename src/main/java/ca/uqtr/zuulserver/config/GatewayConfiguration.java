@@ -100,12 +100,14 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
         return new DelegatingJwtClaimsSetVerifier(Arrays.asList(issuerClaimVerifier(), customJwtClaimVerifier()));
     }
 
+    @Value("${zuul-service.issuer-claim-verifiers.url}")
+    private String PATIENT_SERVICE_GET_PROFILE_INFOS;
     //The JWT token contains a different value for issuer “iss” claim, a simple InvalidTokenException will be thrown.
     //If the token does contain the issuer “iss” claim, no exception will be thrown and the token is considered valid.
     @Bean
     public JwtClaimsSetVerifier issuerClaimVerifier() {
         try {
-            return new IssuerClaimVerifier(new URL("http://localhost:4200"));
+            return new IssuerClaimVerifier(new URL("https://ipodsante-92c27.firebaseapp.com"));
         } catch (final MalformedURLException e) {
             throw new RuntimeException(e);
         }
