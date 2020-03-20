@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-@RedisHash("Student")
+@RedisHash("Token")
 public class Token implements Serializable {
 
     private String username;
