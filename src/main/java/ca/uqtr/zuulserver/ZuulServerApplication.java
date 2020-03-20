@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @EnableZuulProxy
 @EnableDiscoveryClient
 @Controller
-
 @EnableRedisRepositories
 public class ZuulServerApplication {
 
