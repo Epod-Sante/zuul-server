@@ -1,5 +1,6 @@
 package ca.uqtr.zuulserver.filter;
 
+import ca.uqtr.zuulserver.repository.TokenRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.zuul.ZuulFilter;
@@ -20,11 +21,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Component
-public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
+@Component
+public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final ObjectMapper mapper = new ObjectMapper();
+    private TokenRepository tokenRepository;
+
+    public RefreshTokenFromRedisPreZuulFilter(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     @SneakyThrows
     @Override
@@ -40,8 +45,11 @@ public class RefreshTokenFromCookiePreZuulFilter extends ZuulFilter {
                 String username = getUsernameFromJWT(token);
                 System.out.println("-----------------------   " + username);
 
+
                 HttpServletRequest req = ctx.getRequest();
-                String refreshToken = extractRefreshToken(req, username);
+ /*               String refreshToken = extractRefreshToken(req, username);
+*/
+                String refreshToken = tokenRepository.findById(username).get().getRefreshToken();
 
                 if (refreshToken != null) {
 

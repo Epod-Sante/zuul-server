@@ -39,7 +39,8 @@ dependencies {
     compile group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.2.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.2.2.RELEASE'
     compile group: 'org.json', name: 'json', version: '20180813'
-
+    implementation 'org.springframework.data:spring-data-redis:2.2.5.RELEASE'
+    implementation 'redis.clients:jedis:3.2.0'
 }
 
 dependencyManagement {

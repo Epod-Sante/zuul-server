@@ -2,16 +2,15 @@ package ca.uqtr.zuulserver.filter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import ca.uqtr.zuulserver.entity.Token;
+import ca.uqtr.zuulserver.repository.TokenRepository;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
@@ -29,11 +28,16 @@ Type: Zuul filter.
 Functionality: Remove the refresh_token from the response and save in a cookies
                Delete the cookies when there is a request to logout.
 */
-//@Component
-public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
+@Component
+public class RefreshTokenInRedisPostZuulFilter extends ZuulFilter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ObjectMapper mapper = new ObjectMapper();
+    private TokenRepository tokenRepository;
+
+    public RefreshTokenInRedisPostZuulFilter(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     @Override
     public Object run() {
@@ -57,10 +61,16 @@ public class RefreshTokenAsCookiePostZuulFilter extends ZuulFilter {
                 final String refreshToken = responseMap.get("refresh_token").toString();
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);
+
+                tokenRepository.save(new Token(username, refreshToken));
+/*
                 HttpSession session = request.getSession(true);
                 session.setAttribute(username, refreshToken);
 
                 System.out.println("+++++++++++cookie  -"+session.getAttribute(username)+"-");
+*/
+
+
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
