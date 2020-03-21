@@ -19,7 +19,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -53,8 +55,17 @@ public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
 
                 if (refreshToken != null) {
                     System.out.println("----------------------- refreshToken  " + refreshToken);
+                    Map<String, List<String>> newParameterMap = new HashMap<>();
+                    Map<String, String[]> parameterMap = req.getParameterMap();
+                    //getting the current parameter
+                    for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+                        String key = entry.getKey();
+                        String[] values = entry.getValue();
+                        newParameterMap.put(key, Arrays.asList(values));
+                    }
 
-                    ctx.getRequest().getParameterMap().put("refresh_token", new String[]{refreshToken});
+                    newParameterMap.put("refresh_token",Arrays.asList(refreshToken));
+                    ctx.setRequestQueryParams(newParameterMap);
                 }
             }
 
