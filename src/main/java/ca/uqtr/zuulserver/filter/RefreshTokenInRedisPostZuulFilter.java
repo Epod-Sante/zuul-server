@@ -63,12 +63,12 @@ public class RefreshTokenInRedisPostZuulFilter extends ZuulFilter {
                 responseBody = mapper.writeValueAsString(responseMap);
 
                 tokenRepository.save(new Token(username, refreshToken));
-/*
-                HttpSession session = request.getSession(true);
-                session.setAttribute(username, refreshToken);
 
-                System.out.println("+++++++++++cookie  -"+session.getAttribute(username)+"-");
-*/
+               // HttpSession session = request.getSession(true);
+               // session.setAttribute(username, refreshToken);
+
+               // System.out.println("+++++++++++cookie  -"+session.getAttribute(username)+"-");
+
 
 
 
