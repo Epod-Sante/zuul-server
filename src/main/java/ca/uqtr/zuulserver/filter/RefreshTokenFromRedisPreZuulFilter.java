@@ -44,9 +44,9 @@ public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
 
 
                 HttpServletRequest req = ctx.getRequest();
-               //String refreshToken = extractRefreshToken(req, username);
+               String refreshToken = extractRefreshToken(req, username);
 
-                String refreshToken = tokenRepository.findById(username).get().getRefreshToken();
+            //String refreshToken = tokenRepository.findById(username).get().getRefreshToken();
 
                 if (refreshToken != null) {
 
