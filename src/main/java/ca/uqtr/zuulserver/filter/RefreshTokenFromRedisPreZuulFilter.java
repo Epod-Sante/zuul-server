@@ -54,10 +54,7 @@ public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
                 if (refreshToken != null) {
                     System.out.println("----------------------- refreshToken  " + refreshToken);
 
-                    Map<String, String[]> param = new HashMap<>();
-                    param.put("refresh_token", new String[]{refreshToken});
-                    //param.put("grant_type", new String[] { "refresh_token" });
-                    ctx.setRequest(new CustomHttpServletRequest(req, param));
+                    ctx.getRequest().getParameterMap().put("refresh_token", new String[]{refreshToken});
                 }
             }
 
