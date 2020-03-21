@@ -39,39 +39,48 @@ public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
         final String requestURI = ctx.getRequest().getRequestURI();
+        HttpServletRequest req = ctx.getRequest();
+        HttpSession session = req.getSession(false);
+        String username;
+        String refreshToken = null;
         logger.info("in zuul filter RefreshTokenFromCookiePreZuulFilter" + ctx.getRequest().getRequestURI());
-        if (ctx.getRequest().getParameter("grant_type").equals("refresh_token") || requestURI.contains("oauth/check_token")) {
-            String username = ctx.getRequest().getParameter("user_name");
+        
+        if (ctx.getRequest().getParameter("grant_type").equals("refresh_token")) {
+            username = ctx.getRequest().getParameter("user_name");
+            //String refreshToken = extractRefreshToken(req, username);
+            getRefreshToken(ctx, req, session, username);
+        }
+        if (requestURI.contains("oauth/check_token")) {
+            String token = ctx.getRequest().getHeader("Authorization");
 
-                System.out.println("-----------------------   " + username);
-
-
-                HttpServletRequest req = ctx.getRequest();
-               //String refreshToken = extractRefreshToken(req, username);
-            HttpSession session = req.getSession(false);
-            String refreshToken = (String) session.getAttribute(username);
-
-            //String refreshToken = tokenRepository.findById(username).get().getRefreshToken();
-
-                if (refreshToken != null) {
-                    System.out.println("----------------------- refreshToken  " + refreshToken);
-                    Map<String, List<String>> newParameterMap = new HashMap<>();
-                    Map<String, String[]> parameterMap = req.getParameterMap();
-                    //getting the current parameter
-                    for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-                        String key = entry.getKey();
-                        String[] values = entry.getValue();
-                        newParameterMap.put(key, Arrays.asList(values));
-                    }
-
-                    newParameterMap.put("refresh_token",Arrays.asList(refreshToken));
-                    ctx.setRequestQueryParams(newParameterMap);
-                }
+            if (token != null) {
+                token = token.replace("bearer ", "");
+                username = getUsernameFromJWT(token);
+                getRefreshToken(ctx, req, session, username);
             }
-
+        }
 
 
         return null;
+    }
+
+    private void getRefreshToken(RequestContext ctx, HttpServletRequest req, HttpSession session, String username) {
+        String refreshToken;
+        refreshToken = (String) session.getAttribute(username);
+        if (refreshToken != null) {
+            System.out.println("----------------------- refreshToken  " + refreshToken);
+            Map<String, List<String>> newParameterMap = new HashMap<>();
+            Map<String, String[]> parameterMap = req.getParameterMap();
+            //getting the current parameter
+            for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+                String key = entry.getKey();
+                String[] values = entry.getValue();
+                newParameterMap.put(key, Arrays.asList(values));
+            }
+
+            newParameterMap.put("refresh_token", Arrays.asList(refreshToken));
+            ctx.setRequestQueryParams(newParameterMap);
+        }
     }
 
     @Override
