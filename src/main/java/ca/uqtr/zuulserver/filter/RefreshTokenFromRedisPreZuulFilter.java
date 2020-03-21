@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -44,11 +45,14 @@ public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
 
 
                 HttpServletRequest req = ctx.getRequest();
-               String refreshToken = extractRefreshToken(req, username);
+               //String refreshToken = extractRefreshToken(req, username);
+            HttpSession session = req.getSession(false);
+            String refreshToken = (String) session.getAttribute(username);
 
             //String refreshToken = tokenRepository.findById(username).get().getRefreshToken();
 
                 if (refreshToken != null) {
+                    System.out.println("----------------------- refreshToken  " + refreshToken);
 
                     Map<String, String[]> param = new HashMap<>();
                     param.put("refresh_token", new String[]{refreshToken});
