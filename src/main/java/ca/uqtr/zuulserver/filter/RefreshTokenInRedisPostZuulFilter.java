@@ -62,21 +62,19 @@ public class RefreshTokenInRedisPostZuulFilter extends ZuulFilter {
                 responseMap.remove("refresh_token");
                 responseBody = mapper.writeValueAsString(responseMap);
 
-                //  tokenRepository.save(new Token(username, refreshToken));
+                tokenRepository.save(new Token(username, refreshToken));
 
-               HttpSession session = request.getSession(true);
+              /* HttpSession session = request.getSession(true);
                 session.setAttribute(username, refreshToken);
 
-                System.out.println("+++++++++++cookie  -"+session.getAttribute(username)+"-");
-
-
-
+                System.out.println("+++++++++++cookie  -"+session.getAttribute(username)+"-");*/
 
             }
             if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
                 String username = getUsernameFromJWT(headerMethod);
-                HttpSession session = request.getSession(false);
-                session.removeAttribute(username);
+                /*HttpSession session = request.getSession(false);
+                session.removeAttribute(username);*/
+                tokenRepository.deleteById(username);
                 //session.invalidate();
             }
             ctx.setResponseBody(responseBody);
@@ -86,7 +84,6 @@ public class RefreshTokenInRedisPostZuulFilter extends ZuulFilter {
         }
         return null;
     }
-
 
     private String extractRefreshToken(HttpServletRequest req, String username) {
         Cookie[] cookies = req.getCookies();

@@ -50,6 +50,8 @@ public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
             username = ctx.getRequest().getParameter("user_name");
             System.out.println("----------------------- user = " + username);
             getRefreshToken(ctx, req, session, username);
+
+
             //String refreshToken = extractRefreshToken(req, username);
         }
         if (!requestURI.contains("/oauth/token") && !requestURI.contains("/oauth/check_token")){
@@ -61,14 +63,13 @@ public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
             System.out.println("----------------------- user = " + username);
             getRefreshToken(ctx, req, session, username);
         }
-
-
         return null;
     }
 
     private void getRefreshToken(RequestContext ctx, HttpServletRequest req, HttpSession session, String username) {
-        String refreshToken;
-        refreshToken = (String) session.getAttribute(username);
+        //String refreshToken = (String) session.getAttribute(username);
+
+        String refreshToken = tokenRepository.findById(username).get().getRefreshToken();
         if (refreshToken != null) {
             System.out.println("----------------------- refreshToken  " + refreshToken);
             Map<String, List<String>> newParameterMap = new HashMap<>();
