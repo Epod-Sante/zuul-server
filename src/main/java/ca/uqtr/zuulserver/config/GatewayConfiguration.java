@@ -28,10 +28,9 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
     @Value("${authorization-server.base-url}")
     private String AuthorizationServerBaseURL;
 
-
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-       http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true).and().and().authorizeRequests()
+       http.authorizeRequests()
                 .antMatchers("/api/v1/auth-service/oauth/**",
                         "/api/v1/auth-service/oauth/token",
                         "/api/v1/auth-service/registration",
@@ -58,7 +57,10 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                 .authorizeRequests()
                 //.antMatchers("/api/v1/patient-service/create").hasRole("PROFESSIONAL")
                 .antMatchers("/**")
-                .authenticated();
+                .authenticated()
+               .and()
+               .sessionManagement()            //Session controle concurence access
+               .maximumSessions(3);
 
     }
 
