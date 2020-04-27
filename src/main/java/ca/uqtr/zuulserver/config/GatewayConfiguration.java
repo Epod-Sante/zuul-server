@@ -30,7 +30,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-       http.authorizeRequests()
+       http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true).and().and().authorizeRequests()
                 .antMatchers("/api/v1/auth-service/oauth/**",
                         "/api/v1/auth-service/oauth/token",
                         "/api/v1/auth-service/registration",
