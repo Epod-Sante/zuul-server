@@ -70,13 +70,13 @@ public class RefreshTokenInRedisPostZuulFilter extends ZuulFilter {
                 System.out.println("+++++++++++cookie  -"+session.getAttribute(username)+"-");*/
 
             }
-            if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
+            /*if (requestURI.contains("logingout") && requestMethod.equals("DELETE")) {
                 String username = getUsernameFromJWT(headerMethod);
-                /*HttpSession session = request.getSession(false);
-                session.removeAttribute(username);*/
+                *//*HttpSession session = request.getSession(false);
+                session.removeAttribute(username);*//*
                 tokenRepository.deleteById(username);
                 //session.invalidate();
-            }
+            }*/
             ctx.setResponseBody(responseBody);
 
         } catch (final IOException e) {
