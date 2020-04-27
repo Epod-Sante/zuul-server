@@ -60,7 +60,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                 .authenticated()
                .and()
                .sessionManagement()            //Session controle concurence access
-               .maximumSessions(3);
+               .maximumSessions(3).maxSessionsPreventsLogin(true);
 
     }
 
