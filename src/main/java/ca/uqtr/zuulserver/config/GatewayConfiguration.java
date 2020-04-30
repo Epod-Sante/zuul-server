@@ -59,7 +59,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                 .antMatchers("/**")
                 .authenticated()
                .and()
-               .sessionManagement()            //Session controle concurence access
+               .sessionManagement()        //Session controle concurence access
                .maximumSessions(3).maxSessionsPreventsLogin(false);
 
     }
