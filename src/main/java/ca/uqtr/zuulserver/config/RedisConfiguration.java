@@ -26,7 +26,7 @@ public class RedisConfiguration {
                     Protocol.DEFAULT_TIMEOUT,
                     redisURI.getUserInfo().split(":",2)[1]);
         } catch (URISyntaxException e) {
-            throw new RuntimeException("Redis couldn't be configured from URL in REDIS_URL env var:"+
+            throw new RuntimeException("Redis couldn't be configured with URL :"+
                     System.getenv("REDIS_URL"));
         }
     }
