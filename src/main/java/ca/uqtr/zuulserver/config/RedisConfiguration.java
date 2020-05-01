@@ -6,17 +6,29 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import redis.clients.jedis.Protocol;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Configuration
 public class RedisConfiguration {
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-        jedisConnectionFactory.setHostName("ec2-34-203-3-176.compute-1.amazonaws.com");
-        jedisConnectionFactory.setPort(21369);
-        jedisConnectionFactory.setPassword("pda31645dbaf43d93b4aecb0dee8c7cd26b2b94056e2b4ce9a2960e0508c49aea");
-        return jedisConnectionFactory;
+        JedisConnectionFactory redis = new JedisConnectionFactory();
+        String redisUrl = System.getenv("REDIS_URL");
+
+        URI redisUri = null;
+        try {
+            redisUri = new URI(redisUrl);
+            redis.setHostName(redisUri.getHost());
+            redis.setPort(redisUri.getPort());
+            redis.setPassword(redisUri.getUserInfo().split(":",2)[1]);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return redis;
     }
 
     @Bean
