@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
 import java.net.URI;
@@ -15,27 +17,19 @@ import java.net.URISyntaxException;
 public class RedisConfiguration {
 
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        JedisConnectionFactory redis = new JedisConnectionFactory();
-        String redisUrl = System.getenv("REDIS_URL");
-
-        URI redisUri = null;
+    public JedisPool getJedisPool() {
         try {
-            redisUri = new URI(redisUrl);
-            redis.setHostName(redisUri.getHost());
-            redis.setPort(redisUri.getPort());
-            redis.setPassword(redisUri.getUserInfo().split(":",2)[1]);
+            URI redisURI = new URI(System.getenv("REDIS_URL"));
+            return new JedisPool(new JedisPoolConfig(),
+                    redisURI.getHost(),
+                    redisURI.getPort(),
+                    Protocol.DEFAULT_TIMEOUT,
+                    redisURI.getUserInfo().split(":",2)[1]);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Redis couldn't be configured from URL in REDIS_URL env var:"+
+                    System.getenv("REDIS_URL"));
         }
-        return redis;
     }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
-        return template;
-    }
 
 }
