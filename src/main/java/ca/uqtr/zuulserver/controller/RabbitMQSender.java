@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RabbitMQSender {
 
-    @Autowired
-    private AmqpTemplate rabbitTemplate;
+    private final AmqpTemplate rabbitTemplate;
 
     @Value("${rabbitmq.exchange}")
     private String exchange;
@@ -18,9 +17,15 @@ public class RabbitMQSender {
     @Value("${rabbitmq.routingKey}")
     private String routingkey;
 
+    @Autowired
+    public RabbitMQSender(AmqpTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
     public void send(Message message) {
-        rabbitTemplate.convertAndSend(exchange, routingkey, message);
         System.out.println("Exchange : " + exchange + ", Routing key : " + routingkey + ", Message : " + message);
+        rabbitTemplate.convertAndSend(exchange, routingkey, message);
+        System.out.println("Success");
 
     }
 }
