@@ -8,12 +8,35 @@ import org.springframework.data.redis.core.RedisHash;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Data
-@AllArgsConstructor
-public class Message implements Serializable {
-
+public class Message {
     @JsonProperty("time")
     private Timestamp time;
     @JsonProperty("subscriptionId")
     private String subscriptionId;
+
+    public Message() {
+    }
+
+    public Message(Timestamp time, String subscriptionId) {
+        this.time = time;
+        this.subscriptionId = subscriptionId;
+    }
+
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
+
+    public String getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    public void setSubscriptionId(String subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
+
+
 }
