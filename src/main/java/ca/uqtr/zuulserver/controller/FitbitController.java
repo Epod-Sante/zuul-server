@@ -36,6 +36,8 @@ public class FitbitController {
             JSONArray jsonArray = new JSONArray(responseFromAPI);
             JSONObject obj = (JSONObject) jsonArray.get(0);
             String subscriptionId = obj.getString("subscriptionId");
+            System.out.println("////////////////////////  subscriptionId  "+subscriptionId);
+
             executorService.schedule(() -> {
                 rabbitMQSender.send(new Message(new Timestamp(System.currentTimeMillis()), subscriptionId));
             }, 10, TimeUnit.SECONDS);
