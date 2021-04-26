@@ -24,7 +24,7 @@ public class RabbitMQSender {
 
     public void send(Message message) {
         System.out.println("Exchange : " + exchange + ", Routing key : " + routingkey + ", Message : " + message);
-        rabbitTemplate.convertAndSend(exchange, routingkey, message.toString());
+        rabbitTemplate.convertAndSend(exchange, routingkey, message);
         System.out.println("Success");
 
     }
