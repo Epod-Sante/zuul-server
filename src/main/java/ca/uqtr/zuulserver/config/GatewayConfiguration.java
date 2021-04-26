@@ -53,7 +53,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
                         "/api/v1/fitbit-service/notifications",
                         "/api/v1/fitbit-service/docs",
                         "/api/v1/fitbit-service/subscription/notifications",
-                        "/api/v1/fitbit/notifications")
+                        "/fitbit/notifications")
                 .permitAll()
                 .and()
                 .authorizeRequests()
