@@ -4,12 +4,10 @@ import ca.uqtr.zuulserver.entity.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.concurrent.Executors;
@@ -19,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("fitbit")
 public class FitbitController {
+    @Value("${fitbit.subscription.verification-code}")
+    private String fitbitVerificationCode;
 
     final private RabbitMQSender rabbitMQSender;
 
@@ -43,6 +43,16 @@ public class FitbitController {
         } finally {
             executorService.shutdown();
         }
+    }
+
+
+    @GetMapping("/notifications")
+    public ResponseEntity<HttpStatus> getFitBitNotification(@RequestParam String verify) {
+        System.out.println("////////////////////////  getFitBitNotification");
+        if (verify.equals(fitbitVerificationCode)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }
