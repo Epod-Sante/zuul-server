@@ -1,9 +1,7 @@
 package ca.uqtr.zuulserver.config;
 
 
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,34 +10,54 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.Binding;
 
 @Configuration
 public class RabbitMQConfiguration {
 
-    @Value("${rabbitmq.queue}")
-    String queue;
-
     @Value("${rabbitmq.exchange}")
-    String exchange;
+    private String exchange;
+    @Value("${rabbitmq.dead-letter-exchange}")
+    private String deadLetterExchange;
 
-    @Value("${rabbitmq.routingKey}")
+    @Value("${rabbitmq.queue}")
+    private String queue;
+    @Value("${rabbitmq.dead-letter-queue}")
+    private String deadLetterQueue;
+
+    @Value("${rabbitmq.routing-key}")
     private String routingKey;
+    @Value("${rabbitmq.dlq-routing-key}")
+    private String DLQRoutingKey;
 
-    @Bean
-    Queue queue() {
-        return new Queue(queue, true);
-    }
 
     @Bean
     DirectExchange exchange() {
         return new DirectExchange(exchange);
     }
+    @Bean
+    DirectExchange DLX() {
+        return new DirectExchange("dead-letter-exchange");
+    }
 
     @Bean
-    Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+    Queue queue() {
+        return QueueBuilder.durable(queue)
+                .withArgument("x-dead-letter-exchange", "")
+                .withArgument("x-dead-letter-routing-key", deadLetterQueue)
+                .build();
+    }
+    @Bean
+    Queue DLQ() {
+        return QueueBuilder.durable(deadLetterQueue).build();
+    }
+
+    @Bean
+    Binding binding() {
+        return BindingBuilder.bind(queue()).to(exchange()).with(routingKey);
+    }
+    @Bean
+    Binding DLQBinding() {
+        return BindingBuilder.bind(DLQ()).to(DLX()).with(DLQRoutingKey);
     }
 
     @Bean
