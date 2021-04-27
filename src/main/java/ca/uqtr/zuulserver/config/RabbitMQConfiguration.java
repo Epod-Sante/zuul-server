@@ -4,6 +4,7 @@ package ca.uqtr.zuulserver.config;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -41,7 +42,7 @@ public class RabbitMQConfiguration {
     @Bean
     Queue queue() {
         return QueueBuilder.durable(queue)
-                .withArgument("x-dead-letter-exchange", "")
+                .withArgument("x-dead-letter-exchange", deadLetterExchange)
                 .withArgument("x-dead-letter-routing-key", deadLetterQueue)
                 .build();
     }
@@ -80,4 +81,10 @@ public class RabbitMQConfiguration {
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
         return rabbitTemplate;
     }
+
+    @Bean
+    public AmqpAdmin rabbitAdmin() {
+        return new RabbitAdmin(connectionFactory());
+    }
+
 }
