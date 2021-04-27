@@ -29,7 +29,6 @@ public class RabbitMQConfiguration {
     @Value("${rabbitmq.dlq-routing-key}")
     private String DLQRoutingKey;
 
-
     @Bean
     DirectExchange exchange() {
         return new DirectExchange(exchange);
