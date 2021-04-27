@@ -14,7 +14,7 @@ public class RabbitMQSender {
     @Value("${rabbitmq.exchange}")
     private String exchange;
 
-    @Value("${rabbitmq.routingKey}")
+    @Value("${rabbitmq.routing-key}")
     private String routingkey;
 
     @Autowired
