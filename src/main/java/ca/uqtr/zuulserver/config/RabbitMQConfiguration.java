@@ -42,7 +42,7 @@ public class RabbitMQConfiguration {
     @Bean
     Queue queue() {
         return QueueBuilder.durable(queue)
-                .withArgument("x-dead-letter-exchange", "")
+                .withArgument("x-dead-letter-exchange", deadLetterExchange)
                 .withArgument("x-dead-letter-routing-key", deadLetterQueue)
                 .build();
     }
