@@ -2,8 +2,11 @@ package ca.uqtr.zuulserver.config;
 
 import ca.uqtr.zuulserver.security.CustomClaimVerifier;
 import io.micrometer.core.instrument.util.IOUtils;
+import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -124,5 +127,15 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
         return new CustomClaimVerifier();
     }
 
-
+    @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer() {
+        return (tomcat) -> tomcat.addConnectorCustomizers((connector) -> {
+            if (connector.getProtocolHandler() instanceof AbstractHttp11Protocol) {
+                AbstractHttp11Protocol<?> protocolHandler = (AbstractHttp11Protocol<?>) connector
+                        .getProtocolHandler();
+                protocolHandler.setKeepAliveTimeout(80000);
+                protocolHandler.setMaxKeepAliveRequests(500);
+            }
+        });
+    }
 }

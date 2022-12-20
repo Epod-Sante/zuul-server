@@ -36,7 +36,6 @@ public class FitbitController {
             JSONArray jsonArray = new JSONArray(responseFromAPI);
             JSONObject obj = (JSONObject) jsonArray.get(0);
             String subscriptionId = obj.getString("subscriptionId");
-            System.out.println("////////////////////////  subscriptionId  "+subscriptionId);
 
             executorService.schedule(() -> {
                 rabbitMQSender.send(new Message(new Timestamp(System.currentTimeMillis()), subscriptionId));
@@ -50,7 +49,6 @@ public class FitbitController {
 
     @GetMapping("/notifications")
     public ResponseEntity<HttpStatus> getFitBitNotification(@RequestParam String verify) {
-        System.out.println("////////////////////////  getFitBitNotification");
         if (verify.equals(fitbitVerificationCode)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

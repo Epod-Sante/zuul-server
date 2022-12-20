@@ -67,10 +67,10 @@ public class RabbitMQConfiguration {
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory("fish.rmq.cloudamqp.com");
-        connectionFactory.setUsername("bklaoghl");
-        connectionFactory.setPassword("PPdAiJgyoVKYPdNdIdOvMt8F8F7l2B9K");
-        connectionFactory.setVirtualHost("bklaoghl");
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory("b-6b2f3e20-0a87-48cc-bcea-9eabd0c63114.mq.ca-central-1.amazonaws.com");
+        connectionFactory.setUsername("admin");
+        connectionFactory.setPassword("pod-isante2022");
+        connectionFactory.setPort(5671);
         return connectionFactory;
     }
 

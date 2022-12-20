@@ -43,15 +43,11 @@ public class RefreshTokenFromRedisPreZuulFilter extends ZuulFilter {
         HttpSession session = req.getSession(false);
         String username = null;
         String refreshToken = null;
-        logger.info("in zuul filter RefreshTokenFromCookiePreZuulFilter" + ctx.getRequest().getRequestURI());
+        logger.info("in zuul filter RefreshTokenFromRedisPreZuulFilter" + ctx.getRequest().getRequestURI());
 
         if (ctx.getRequest().getParameter("grant_type") != null && ctx.getRequest().getParameter("grant_type").equals("refresh_token")) {
-            System.out.println("-----------------------******************** 1111 ");
             username = ctx.getRequest().getParameter("user_name");
-            System.out.println("----------------------- user = " + username);
             getRefreshToken(ctx, req, session, username);
-
-
             //String refreshToken = extractRefreshToken(req, username);
         }
         /*if (!requestURI.contains("/oauth/token") && !requestURI.contains("/oauth/check_token")){

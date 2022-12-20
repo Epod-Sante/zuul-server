@@ -42,7 +42,7 @@ public class RefreshTokenInRedisPostZuulFilter extends ZuulFilter {
     @Override
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
-        logger.info("in zuul filter RefreshTokenAsCookiePostZuulFilter" + ctx.getRequest().getRequestURI());
+        logger.info("in zuul filter RefreshTokenInRedisPostZuulFilter" + ctx.getRequest().getRequestURI());
 
         final String requestURI = ctx.getRequest().getRequestURI();
         final String requestMethod = ctx.getRequest().getMethod();;
@@ -80,7 +80,8 @@ public class RefreshTokenInRedisPostZuulFilter extends ZuulFilter {
             ctx.setResponseBody(responseBody);
 
         } catch (final IOException e) {
-            logger.error("Error occurred in zuul post filter", e);
+            logger.error("Error occurred in zuul post filter");
+            e.printStackTrace();
         }
         return null;
     }
@@ -89,11 +90,8 @@ public class RefreshTokenInRedisPostZuulFilter extends ZuulFilter {
         Cookie[] cookies = req.getCookies();
         System.out.println(cookies);
         if (cookies != null) {
-            System.out.println("-----------------------  00 " + username);
             for (int i = 0; i < cookies.length; i++) {
-                System.out.println("-----------------------  11 " + i);
                 if (cookies[i].getName().equalsIgnoreCase(username)) {
-                    System.out.println("..........." + cookies[i].getValue());
                     return cookies[i].getValue();
                 }
             }
