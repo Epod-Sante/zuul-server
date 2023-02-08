@@ -22,7 +22,7 @@ public class ZuulServerApplication {
         SpringApplication.run(ZuulServerApplication.class, args);
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "/status")
     @ResponseBody
     public String getPatientByExpertId(){
         return "zuul server controller";
