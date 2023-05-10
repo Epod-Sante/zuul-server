@@ -31,6 +31,7 @@ public class FitbitController {
     // @JsonInclude(JsonInclude.Include.NON_NULL)
     @PostMapping("/notifications")
     public ResponseEntity<HttpStatus> getFitBitNotificationData(@RequestBody String responseFromAPI) {
+        System.out.println("////////////////////////  getFitBitNotificationData zuul");
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         try {
             JSONArray jsonArray = new JSONArray(responseFromAPI);
